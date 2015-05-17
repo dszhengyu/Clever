@@ -194,14 +194,40 @@ Matrix Matrix::splice(size_t start, size_t end, int axis, bool inplace)
 
 }
 
-//Matrix Matrix::reverse(bool inplace = 0)
-//{
+Matrix Matrix::reverse(bool inplace)
+{
+    assert(this->row == this->column);
+    Matrix result(*this);
+    for (decltype(result.row) i = 0; i < result.row; ++i) {
+        for (auto j = i; j < result.column; ++j) {
+            auto tmp = result(i, j);
+            result(i, j) = result(j, i);
+            result(j, i) = tmp;
+        }
+    }
 
-//}
+    if (inplace) {
+        *this = result;
+        return Matrix();
+    }
+    else
+        return result;
+}
 
 Matrix operator*(const double c, const Matrix &lhs)
 {
     Matrix result(lhs * c);
+    return result;
+}
+
+Matrix dotProduct(const Matrix &lhs, const Matrix &rhs)
+{
+    assert(lhs.row== rhs.row);
+    assert(lhs.column == rhs.column);
+
+    Matrix result(lhs.row, lhs.column);
+    transform(lhs.mat.begin(), lhs.mat.end(), rhs.mat.begin(), result.mat.begin(),
+              [](double left, double right) {return left * right;});
     return result;
 }
 

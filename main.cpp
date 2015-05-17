@@ -57,7 +57,18 @@ int main()
     auto mSpliceAxis0 = m.splice(2, m.rowSize(), 0);
     cout << "mSpliceAxis0" << endl << mSpliceAxis0 << endl;
 
-//    m.reverse();
+    m = Matrix{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+    cout << "m" << endl << m << endl;
+
+    n = Matrix{{0, 0, 0}, {1, 1, 1}, {2, 2, 2}};
+    cout << "n" << endl << n << endl;
+
+    auto innerProduct = dotProduct(m, n);
+    cout << "innerProduct" << endl << innerProduct << endl;
+
+    cout << "m" << endl << m << endl;
+    auto mReverse = m.reverse();
+    cout << "mReverse" << endl << mReverse << endl;
 
     return 0;
 }

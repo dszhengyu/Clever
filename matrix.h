@@ -20,6 +20,7 @@ using std::endl;
 
 class Matrix
 {
+friend Matrix dotProduct(const Matrix &lhs, const Matrix &rhs);
 public:
     explicit Matrix();
     explicit Matrix(initializer_list<initializer_list<double>> initArray);
@@ -29,15 +30,14 @@ public:
     double operator()(size_t, size_t) const;
     size_t rowSize() {return row;};
     size_t columnSize() {return column;};
-    void reverse();
     Matrix operator+(const Matrix &rhs) const;
     Matrix operator-(const Matrix &rhs) const;
     Matrix operator*(const Matrix &rhs) const;
     Matrix operator*(const double c) const;
     bool operator==(const Matrix &rhs) const;
-    Matrix merge(Matrix &rhs, int axis, bool inplace = 0);
-    Matrix splice(size_t start, size_t end, int axis, bool inplace = 0);
-    Matrix reverse(bool inplace = 0);
+    Matrix merge(Matrix &rhs, int axis, bool inplace = false);
+    Matrix splice(size_t start, size_t end, int axis, bool inplace = false);
+    Matrix reverse(bool inplace = false);
 private:
     size_t row;
     size_t column;
@@ -45,6 +45,7 @@ private:
 };
 
 Matrix operator*(const double c, const Matrix &lhs);
+Matrix dotProduct(const Matrix &lhs, const Matrix &rhs);
 ostream &operator<<(ostream &out, Matrix &m);
 
 #endif // MATRIX_H
