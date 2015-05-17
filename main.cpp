@@ -37,8 +37,27 @@ int main()
     auto mutipleWithMatrix = m * n;
     cout << "mutipleWithMatrix" << endl << mutipleWithMatrix << endl;
 
-    //    m.reverse();
-    //    cout << m << endl;
+    m.merge(n, 1, true);
+    cout << "mMergeNAxis1Inplace" << endl << m << endl;
+
+    auto mMergeMAxis0 = m.merge(m, 0, true);
+    cout << "mMergeMAxis0" << endl << mMergeMAxis0 << endl;
+
+    cout << "equal test" << endl;
+    cout << "m == n" << '\t' << (m == n) << endl;
+    cout << "m == m" << '\t' << (m == m) << endl;
+
+    cout << "m" << endl << m << endl;
+    m.splice(1, 2, 1, true);
+    cout << "m after splice" << endl << m << endl;
+
+    m.merge(m, 1, true);
+    cout << "m merge self" << endl << m << endl;
+
+    auto mSpliceAxis0 = m.splice(2, m.rowSize(), 0);
+    cout << "mSpliceAxis0" << endl << mSpliceAxis0 << endl;
+
+//    m.reverse();
 
     return 0;
 }
