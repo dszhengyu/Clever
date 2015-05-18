@@ -1,11 +1,42 @@
 #include <iostream>
 
 #include "matrix.h"
+#include "perceptron.h"
 
 using std::cout;
 using std::endl;
 
+void MatrixUnitTest();
+void PerceptronUnitTest();
+
 int main()
+{
+    MatrixUnitTest();
+    PerceptronUnitTest();
+    return 0;
+}
+
+void PerceptronUnitTest()
+{
+    Matrix X{{1, 1}, {3, 3}, {4, 3}};
+    Matrix y{{-1}, {1}, {1}};
+    cout << "X" << endl << X << endl;
+    Matrix Xtrain(X.rowSize(), 1, 1);
+    Xtrain.merge(X, 1, true);
+    cout << "Xtrain" << endl << Xtrain << endl;
+    cout << "y" << endl << y << endl;
+
+    Perceptron percetronModel(1, 100);
+    percetronModel.train(X, y);
+    auto weight = percetronModel.getWeight();
+    cout << "weight" << endl << weight << endl;
+
+    auto yPredict = percetronModel.predict(X);
+    cout << "yPredict" << endl << yPredict << endl;
+
+}
+
+void MatrixUnitTest()
 {
     Matrix m{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
     cout << "m" << endl << m << endl;
@@ -63,13 +94,26 @@ int main()
     n = Matrix{{0, 0, 0}, {1, 1, 1}, {2, 2, 2}};
     cout << "n" << endl << n << endl;
 
-    auto innerProduct = dotProduct(m, n);
-    cout << "innerProduct" << endl << innerProduct << endl;
+    auto dotProductExample = Matrix::dotProduct(m, n);
+    cout << "dotProductExample" << endl << dotProductExample << endl;
 
     cout << "m" << endl << m << endl;
     auto mReverse = m.reverse();
     cout << "mReverse" << endl << mReverse << endl;
 
-    return 0;
-}
+    m = Matrix{{1, 2, 3}};
+    cout << "m" << endl << m << endl;
 
+    n = Matrix{{4}, {5}, {6}};
+    cout << "n" << endl << n << endl;
+
+    double innerProductExample = m.innerProduct(n);
+    cout << "innerProductExample" << endl << innerProductExample << endl;
+    cout << endl;
+
+    m = Matrix{{-1, 1, -10, -100, 3}};
+    cout << "m" << endl << m << endl;
+
+    auto mSign = Matrix::sign(m);
+    cout << "mSign" << endl << mSign << endl;
+}

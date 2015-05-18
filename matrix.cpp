@@ -15,8 +15,8 @@ Matrix::Matrix(initializer_list<initializer_list<double>> initArray)
         copyPlace = copy(rowInArray.begin(), rowInArray.end(), copyPlace);
 }
 
-Matrix::Matrix(size_t row, size_t column)
-    :row(row), column(column), mat(row * column, 0)
+Matrix::Matrix(size_t row, size_t column, double initNum)
+    :row(row), column(column), mat(row * column, initNum)
 {
 
 }
@@ -41,7 +41,7 @@ double Matrix::operator()(size_t i, size_t j) const
     assert(i < row);
     assert(j < column);
 
-    return mat[i * row + j];
+    return mat[i * column + j];
 }
 Matrix Matrix::operator+(const Matrix &rhs) const
 {
@@ -69,9 +69,9 @@ Matrix Matrix::operator*(const Matrix &rhs) const
 {
     assert(column == rhs.row);
     Matrix result(row, rhs.column);
-    for (int i = 0; i < row; ++i) {
-        for (int j = 0; j < column; ++j)
-            for (int k = 0; k < column; ++k)
+    for (int i = 0; i < result.row; ++i) {
+        for (int j = 0; j < result.column; ++j)
+            for (int k = 0; k < this->column; ++k)
                 result(i, j) += this->operator ()(i, k) * rhs(k, j);
      }
 
@@ -94,7 +94,18 @@ bool Matrix::operator==(const Matrix &rhs) const
     return rowEqual && columnEqual && matEqual;
 }
 
-Matrix Matrix::merge(Matrix &rhs, int axis, bool inplace)
+double Matrix::innerProduct(const Matrix &rhs)
+{
+    assert(this->row == 1);
+    assert(rhs.column == 1);
+    assert(this->column == rhs.row);
+
+    double sum = inner_product(this->mat.begin(), this->mat.end(),
+                              rhs.mat.begin(), 0.0);
+    return sum;
+}
+
+Matrix Matrix::merge(const Matrix &rhs, int axis, bool inplace)
 {
     // check the limit condition
     assert(axis == 0 || axis == 1);
@@ -107,7 +118,7 @@ Matrix Matrix::merge(Matrix &rhs, int axis, bool inplace)
 
     // Matrix merge it self inplace
     Matrix rhsCopy(0, 0);
-    Matrix *rhsPtr = nullptr;
+    const Matrix *rhsPtr = nullptr;
     if (this == &rhs && inplace) {
         rhsCopy = rhs;
         rhsPtr = &rhsCopy;
@@ -126,7 +137,7 @@ Matrix Matrix::merge(Matrix &rhs, int axis, bool inplace)
         result = &copyMatrix;
     }
 
-    result->mat.resize(row * column + rhsPtr->row * rhsPtr->column);
+    result->mat.reserve(row * column + rhsPtr->row * rhsPtr->column);
     if (axis == 1) {
         result->column += rhsPtr->column;
         int insertPosition = -static_cast<int>(rhsPtr->column);
@@ -155,7 +166,7 @@ Matrix Matrix::splice(size_t start, size_t end, int axis, bool inplace)
 {
     // assert base condition
     assert(axis == 0 || axis == 1);
-    assert(start > 0 && start < end);
+    assert(start >= 0 && start < end);
     if (axis == 1) {
         assert(end <= column);
     }
@@ -196,13 +207,12 @@ Matrix Matrix::splice(size_t start, size_t end, int axis, bool inplace)
 
 Matrix Matrix::reverse(bool inplace)
 {
-    assert(this->row == this->column);
-    Matrix result(*this);
+    //assert(this->row == this->column);
+
+    Matrix result(this->column, this->row);
     for (decltype(result.row) i = 0; i < result.row; ++i) {
-        for (auto j = i; j < result.column; ++j) {
-            auto tmp = result(i, j);
-            result(i, j) = result(j, i);
-            result(j, i) = tmp;
+        for (decltype(result.row) j = 0; j < result.column; ++j) {
+            result(i, j) = this->operator ()(j, i);
         }
     }
 
@@ -214,13 +224,7 @@ Matrix Matrix::reverse(bool inplace)
         return result;
 }
 
-Matrix operator*(const double c, const Matrix &lhs)
-{
-    Matrix result(lhs * c);
-    return result;
-}
-
-Matrix dotProduct(const Matrix &lhs, const Matrix &rhs)
+Matrix Matrix::dotProduct(const Matrix &lhs, const Matrix &rhs)
 {
     assert(lhs.row== rhs.row);
     assert(lhs.column == rhs.column);
@@ -228,6 +232,19 @@ Matrix dotProduct(const Matrix &lhs, const Matrix &rhs)
     Matrix result(lhs.row, lhs.column);
     transform(lhs.mat.begin(), lhs.mat.end(), rhs.mat.begin(), result.mat.begin(),
               [](double left, double right) {return left * right;});
+    return result;
+}
+
+Matrix Matrix::sign(const Matrix &m)
+{
+    Matrix result(m);
+    for_each(result.mat.begin(), result.mat.end(), [](double &unit) {unit = unit > 0 ? 1 : -1;});
+    return result;
+}
+
+Matrix operator*(const double c, const Matrix &lhs)
+{
+    Matrix result(lhs * c);
     return result;
 }
 

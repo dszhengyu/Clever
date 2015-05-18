@@ -5,11 +5,13 @@ CONFIG -= qt
 QMAKE_CXXFLAGS += -std=c++11
 
 SOURCES += main.cpp \
-    matrix.cpp
+    matrix.cpp \
+    perceptron.cpp
 
 include(deployment.pri)
 qtcAddDeployment()
 
 HEADERS += \
-    matrix.h
+    matrix.h \
+    perceptron.h
 
