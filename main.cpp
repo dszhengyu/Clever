@@ -18,14 +18,12 @@ int main()
 
 void PerceptronUnitTest()
 {
-    Matrix X{{1, 1}, {3, 3}, {4, 3}};
-    Matrix y{{-1}, {1}, {1}};
+    Matrix X{{3, 3}, {4, 3}, {1, 1}};
+    Matrix y{{1}, {1}, {-1}};
     cout << "X" << endl << X << endl;
-    Matrix Xtrain(X.rowSize(), 1, 1);
-    Xtrain.merge(X, 1, true);
-    cout << "Xtrain" << endl << Xtrain << endl;
     cout << "y" << endl << y << endl;
 
+    // Origin algorithm
     Perceptron percetronModel(1, 100);
     percetronModel.train(X, y);
     auto weight = percetronModel.getWeight();
@@ -34,6 +32,14 @@ void PerceptronUnitTest()
     auto yPredict = percetronModel.predict(X);
     cout << "yPredict" << endl << yPredict << endl;
 
+    // Parallelism algorithm
+    Perceptron percetronModel2(1, 100, Perceptron::Parallelism);
+    percetronModel2.train(X, y);
+    weight = percetronModel2.getWeight();
+    cout << "weight" << endl <<weight << endl;
+
+    yPredict = percetronModel2.predict(X);
+    cout << "yPredict" << endl << yPredict << endl;
 }
 
 void MatrixUnitTest()
@@ -94,9 +100,6 @@ void MatrixUnitTest()
     n = Matrix{{0, 0, 0}, {1, 1, 1}, {2, 2, 2}};
     cout << "n" << endl << n << endl;
 
-    auto dotProductExample = Matrix::dotProduct(m, n);
-    cout << "dotProductExample" << endl << dotProductExample << endl;
-
     cout << "m" << endl << m << endl;
     auto mReverse = m.reverse();
     cout << "mReverse" << endl << mReverse << endl;
@@ -104,7 +107,7 @@ void MatrixUnitTest()
     m = Matrix{{1, 2, 3}};
     cout << "m" << endl << m << endl;
 
-    n = Matrix{{4}, {5}, {6}};
+    n = Matrix{{4, 5, 6}};
     cout << "n" << endl << n << endl;
 
     double innerProductExample = m.innerProduct(n);
@@ -114,6 +117,21 @@ void MatrixUnitTest()
     m = Matrix{{-1, 1, -10, -100, 3}};
     cout << "m" << endl << m << endl;
 
-    auto mSign = Matrix::sign(m);
+    auto mSign = m.sign();
     cout << "mSign" << endl << mSign << endl;
+
+    n = Matrix{{4}, {5}, {6}};
+    cout << "n" << endl << n << endl;
+    auto k = n * n.reverse();
+    cout << "k" << endl << k << endl;
+
+    m = Matrix{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+    cout << "m" << endl << m << endl;
+
+    n = Matrix{{0, 0, 0}, {1, 1, 1}, {2, 2, 2}};
+    cout << "n" << endl << n << endl;
+
+    auto dotProductExample = m.dotProduct(n);
+    cout << "dotProductExample" << endl << dotProductExample << endl;
+
 }

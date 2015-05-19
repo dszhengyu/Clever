@@ -9,12 +9,12 @@ using std::uniform_int_distribution;
 
 class Perceptron
 {
+public:
     enum Algorithm
     {
         Origin,
         Parallelism
     };
-public:
     explicit Perceptron(double learningRate, int iterationMax,
                         Algorithm algorithmUse = Algorithm::Origin);
     void train(const Matrix &X, const Matrix &y);
@@ -25,7 +25,6 @@ private:
     int iterationMax;
     Algorithm algorithmUse;
     Matrix weight;
-    Matrix alpha;
 };
 
 #endif // PERCEPTRON_H

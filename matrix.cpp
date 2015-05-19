@@ -96,9 +96,8 @@ bool Matrix::operator==(const Matrix &rhs) const
 
 double Matrix::innerProduct(const Matrix &rhs)
 {
-    assert(this->row == 1);
-    assert(rhs.column == 1);
-    assert(this->column == rhs.row);
+    assert(this->row == 1 || this->column == 1);
+    assert(this->row == rhs.row && this->column == rhs.column);
 
     double sum = inner_product(this->mat.begin(), this->mat.end(),
                               rhs.mat.begin(), 0.0);
@@ -207,8 +206,6 @@ Matrix Matrix::splice(size_t start, size_t end, int axis, bool inplace)
 
 Matrix Matrix::reverse(bool inplace)
 {
-    //assert(this->row == this->column);
-
     Matrix result(this->column, this->row);
     for (decltype(result.row) i = 0; i < result.row; ++i) {
         for (decltype(result.row) j = 0; j < result.column; ++j) {
@@ -224,22 +221,34 @@ Matrix Matrix::reverse(bool inplace)
         return result;
 }
 
-Matrix Matrix::dotProduct(const Matrix &lhs, const Matrix &rhs)
+Matrix Matrix::reverse() const
 {
-    assert(lhs.row== rhs.row);
-    assert(lhs.column == rhs.column);
+    Matrix result = const_cast<Matrix *>(this)->reverse(false);
+    return result;
+}
 
-    Matrix result(lhs.row, lhs.column);
-    transform(lhs.mat.begin(), lhs.mat.end(), rhs.mat.begin(), result.mat.begin(),
+Matrix Matrix::dotProduct(const Matrix &rhs)
+{
+    assert(this->row== rhs.row);
+    assert(this->column == rhs.column);
+
+    Matrix result(this->row, this->column);
+    transform(this->mat.begin(), this->mat.end(), rhs.mat.begin(), result.mat.begin(),
               [](double left, double right) {return left * right;});
     return result;
 }
 
-Matrix Matrix::sign(const Matrix &m)
+Matrix Matrix::sign(bool inplace)
 {
-    Matrix result(m);
+    Matrix result(*this);
     for_each(result.mat.begin(), result.mat.end(), [](double &unit) {unit = unit > 0 ? 1 : -1;});
-    return result;
+
+    if (inplace) {
+        *this = result;
+        return Matrix();
+    }
+    else
+        return result;
 }
 
 Matrix operator*(const double c, const Matrix &lhs)

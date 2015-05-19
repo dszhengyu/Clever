@@ -23,8 +23,6 @@ using std::endl;
 
 class Matrix
 {
-friend Matrix dotProduct(const Matrix &lhs, const Matrix &rhs);
-friend Matrix sign(const Matrix &m);
 public:
     typedef size_t size_type;
     explicit Matrix();
@@ -46,8 +44,9 @@ public:
     Matrix merge(const Matrix &rhs, int axis, bool inplace = false);
     Matrix splice(size_t start, size_t end, int axis, bool inplace = false);
     Matrix reverse(bool inplace = false);
-    static Matrix sign(const Matrix &m);
-    static Matrix dotProduct(const Matrix &lhs, const Matrix &rhs);
+    Matrix reverse() const;
+    Matrix sign(bool inplace = false);
+    Matrix dotProduct(const Matrix &rhs);
 
 private:
     size_t row;
