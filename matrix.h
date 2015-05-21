@@ -14,6 +14,7 @@ using std::initializer_list;
 using std::copy;
 using std::transform;
 using std::for_each;
+using std::accumulate;
 using std::ostream;
 using std::inserter;
 using std::back_inserter;
@@ -47,6 +48,11 @@ public:
     Matrix reverse() const;
     Matrix sign(bool inplace = false);
     Matrix dotProduct(const Matrix &rhs);
+    Matrix abs(bool inplace = false);
+    Matrix square(bool inplace = false);
+    double sum();
+    double max();
+    vector<Matrix> splictRow();
 
 private:
     size_t row;

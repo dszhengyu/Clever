@@ -6,12 +6,16 @@ QMAKE_CXXFLAGS += -std=c++11
 
 SOURCES += main.cpp \
     matrix.cpp \
-    perceptron.cpp
+    perceptron.cpp \
+    knn.cpp \
+    kdtree.cpp
 
 include(deployment.pri)
 qtcAddDeployment()
 
 HEADERS += \
     matrix.h \
-    perceptron.h
+    perceptron.h \
+    knn.h \
+    kdtree.h
 

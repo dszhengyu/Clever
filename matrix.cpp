@@ -251,6 +251,54 @@ Matrix Matrix::sign(bool inplace)
         return result;
 }
 
+Matrix Matrix::abs(bool inplace)
+{
+    Matrix result(*this);
+    for_each(result.mat.begin(), result.mat.end(), [](double &unit) {unit = unit > 0 ? unit : -unit;});
+
+    if (inplace) {
+        *this = result;
+        return Matrix();
+    }
+    else
+        return result;
+}
+Matrix Matrix::square(bool inplace)
+{
+    Matrix result(*this);
+    for_each(result.mat.begin(), result.mat.end(), [](double &unit) {unit = unit * unit;});
+
+    if (inplace) {
+        *this = result;
+        return Matrix();
+    }
+    else
+        return result;
+}
+
+double Matrix::sum()
+{
+    double sum = accumulate(mat.begin(), mat.end(), 0.0);
+    return sum;
+}
+
+double Matrix::max()
+{
+    double max = 0;
+    for_each(mat.begin(), mat.end(),
+             [&](double current) {max = max > current ? max : current;});
+    return max;
+}
+
+//not finish yet
+vector<Matrix> Matrix::splictRow()
+{
+    vector<Matrix> matrixVec(this->row);
+    for (decltype(this->row) i = 0; i < this->row; ++i) {
+        matrixVec;
+    }
+}
+
 Matrix operator*(const double c, const Matrix &lhs)
 {
     Matrix result(lhs * c);

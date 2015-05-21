@@ -12,7 +12,7 @@ void PerceptronUnitTest();
 int main()
 {
     MatrixUnitTest();
-    PerceptronUnitTest();
+    //PerceptronUnitTest();
     return 0;
 }
 
@@ -133,5 +133,29 @@ void MatrixUnitTest()
 
     auto dotProductExample = m.dotProduct(n);
     cout << "dotProductExample" << endl << dotProductExample << endl;
+
+    m = Matrix{{1, -2, 3}, {4, -5, 6}, {7, -8, 9}};
+    cout << "m" << endl << m << endl;
+
+    m.abs(true);
+    cout << "mAbs" << endl << m << endl;
+
+    m = Matrix{{1, -2, 3}, {4, -5, 6}, {7, -8, 9}};
+    cout << "m" << endl << m << endl;
+
+    m.square(true);
+    cout << "mSquare" << endl << m << endl;
+
+    m = Matrix{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+    cout << "m" << endl << m << endl;
+
+    auto mSum = m.sum();
+    cout << "mSum" << endl << mSum << endl << endl;
+
+    m = Matrix{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+    cout << "m" << endl << m << endl;
+
+    auto mMax = m.max();
+    cout << "mMax" << endl << mMax << endl << endl;
 
 }
