@@ -3,14 +3,22 @@
 
 #include <memory>
 #include <functional>
+#include <algorithm>
+#include <deque>
+#include <iostream>
 
 #include "matrix.h"
 
 using std::shared_ptr;
 using std::function;
+using std::sort;
+using std::deque;
+using std::ostream;
+using std::endl;
 
 class L1
 {
+public:
     double operator() (const Matrix& lhs, const Matrix &rhs)
     {
         assert(lhs.rowSize() == 1);
@@ -24,6 +32,7 @@ class L1
 
 class L2
 {
+public:
     double operator() (const Matrix& lhs, const Matrix &rhs)
     {
         assert(lhs.rowSize() == 1);
@@ -37,6 +46,7 @@ class L2
 
 class LInfinite
 {
+public:
     double operator() (const Matrix& lhs, const Matrix &rhs)
     {
         assert(lhs.rowSize() == 1);
@@ -62,13 +72,18 @@ class KdTree
 {
 public:
     typedef function<double(const Matrix&, const Matrix &)> distanceFuncType;
-
-    explicit KdTree(distanceFuncType distanceFunction);
+    typedef shared_ptr<treeNode> treePtr;
+    explicit KdTree(int neighbour, distanceFuncType distanceFunction);
     void formTree(const Matrix &X, const Matrix &y);
     Matrix search(const Matrix &X);
 private:
-    shared_ptr<treeNode> tree;
+    treePtr createNode(vector<Matrix> &trainSet, int curDepth, treePtr parent);
+    void printTree(std::ostream &out = cout) const;
+    Matrix::size_type k;
+    int neighbour;
+    treePtr tree;
     distanceFuncType distanceFunction;
 };
+
 
 #endif // KDTREE_H

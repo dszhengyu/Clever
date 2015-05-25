@@ -1,17 +1,18 @@
 #ifndef KNN_H
 #define KNN_H
 
+
 #include "matrix.h"
 #include "kdtree.h"
 
 class KNN
 {
 public:
-    explicit KNN(int k, KdTree::distanceFuncType distanceFunc = L1());
-    void train(Matrix X, Matrix y);
-    Matrix predict(Matrix X);
+    explicit KNN(int neighbour, KdTree::distanceFuncType distanceFunc = L1());
+    void train(const Matrix &X, const Matrix &y);
+    Matrix predict(const Matrix &X);
 private:
-    int k;
+    int neighbour;
     KdTree tree;
 };
 

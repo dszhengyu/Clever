@@ -2,18 +2,30 @@
 
 #include "matrix.h"
 #include "perceptron.h"
+#include "knn.h"
 
 using std::cout;
 using std::endl;
 
 void MatrixUnitTest();
 void PerceptronUnitTest();
+void KnnUnitTest();
 
 int main()
 {
-    MatrixUnitTest();
-    //PerceptronUnitTest();
+    KnnUnitTest();
     return 0;
+}
+
+void KnnUnitTest()
+{
+    Matrix X{{4, 4}, {3, 2}, {7, 3}, {1, 1}, {2, 5}, {6, 6}};
+    Matrix y{{1},    {-1},   {1},    {1},    {-1},   {1}};
+    cout << "X" << endl << X << endl;
+    cout << "y" << endl << y << endl;
+
+    KNN knnModel(1);
+    knnModel.train(X, y);
 }
 
 void PerceptronUnitTest()
@@ -157,5 +169,11 @@ void MatrixUnitTest()
 
     auto mMax = m.max();
     cout << "mMax" << endl << mMax << endl << endl;
+
+    cout << "m" << endl << m << endl;
+    auto mVec = m.splictRow();
+    for (auto &unit : mVec)
+        cout << "row: " << unit;
+
 
 }

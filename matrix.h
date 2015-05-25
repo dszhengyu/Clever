@@ -43,7 +43,9 @@ public:
     bool operator==(const Matrix &rhs) const;
     double innerProduct(const Matrix &rhs);
     Matrix merge(const Matrix &rhs, int axis, bool inplace = false);
+    Matrix merge(const Matrix &rhs, int axis) const;
     Matrix splice(size_t start, size_t end, int axis, bool inplace = false);
+    Matrix splice(size_t start, size_t end, int axis) const;
     Matrix reverse(bool inplace = false);
     Matrix reverse() const;
     Matrix sign(bool inplace = false);
@@ -52,8 +54,8 @@ public:
     Matrix square(bool inplace = false);
     double sum();
     double max();
-    vector<Matrix> splictRow();
-
+    vector<Matrix> splictRow() const;
+    double toDouble() const;
 private:
     size_t row;
     size_t column;

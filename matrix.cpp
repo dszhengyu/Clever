@@ -161,6 +161,10 @@ Matrix Matrix::merge(const Matrix &rhs, int axis, bool inplace)
         return *result;
 }
 
+Matrix Matrix::merge(const Matrix &rhs, int axis) const
+{
+    return const_cast<Matrix *>(this)->merge(rhs, axis, false);
+}
 Matrix Matrix::splice(size_t start, size_t end, int axis, bool inplace)
 {
     // assert base condition
@@ -202,6 +206,12 @@ Matrix Matrix::splice(size_t start, size_t end, int axis, bool inplace)
     else
         return result;
 
+}
+
+Matrix Matrix::splice(size_t start, size_t end, int axis) const
+{
+    Matrix *matrixPtr = const_cast<Matrix *>(this);
+    return matrixPtr->splice(start, end, axis, false);
 }
 
 Matrix Matrix::reverse(bool inplace)
@@ -290,13 +300,19 @@ double Matrix::max()
     return max;
 }
 
-//not finish yet
-vector<Matrix> Matrix::splictRow()
+vector<Matrix> Matrix::splictRow() const
 {
     vector<Matrix> matrixVec(this->row);
     for (decltype(this->row) i = 0; i < this->row; ++i) {
-        matrixVec;
+        matrixVec[i] = this->splice(i, i + 1, 0);
     }
+    return matrixVec;
+}
+
+double Matrix::toDouble() const
+{
+    assert(row == 1 && column == 1);
+    return mat[0];
 }
 
 Matrix operator*(const double c, const Matrix &lhs)
