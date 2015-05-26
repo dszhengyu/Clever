@@ -19,13 +19,17 @@ int main()
 
 void KnnUnitTest()
 {
-    Matrix X{{4, 4}, {3, 2}, {7, 3}, {1, 1}, {2, 5}, {6, 6}};
-    Matrix y{{1},    {-1},   {1},    {1},    {-1},   {1}};
+    Matrix X{{4, 4}, {3, 2}, {7, 3}, {1, 1}, {2, 5}, {6, 6}, {5, 1}};
+    Matrix y{{1},    {-1},   {1},    {1},    {-1},   {1},    {-1}};
     cout << "X" << endl << X << endl;
     cout << "y" << endl << y << endl;
 
     KNN knnModel(1);
     knnModel.train(X, y);
+
+    cout << "start train..." << endl;
+    Matrix predict = knnModel.predict(X);
+    cout << predict << endl;
 }
 
 void PerceptronUnitTest()

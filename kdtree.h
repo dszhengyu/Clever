@@ -1,11 +1,16 @@
 #ifndef KDTREE_H
 #define KDTREE_H
 
+//#define DEBUG
+
 #include <memory>
 #include <functional>
 #include <algorithm>
 #include <deque>
 #include <iostream>
+#include <stack>
+#include <set>
+#include <cmath>
 
 #include "matrix.h"
 
@@ -13,6 +18,8 @@ using std::shared_ptr;
 using std::function;
 using std::sort;
 using std::deque;
+using std::stack;
+using std::set;
 using std::ostream;
 using std::endl;
 
@@ -73,14 +80,13 @@ class KdTree
 public:
     typedef function<double(const Matrix&, const Matrix &)> distanceFuncType;
     typedef shared_ptr<treeNode> treePtr;
-    explicit KdTree(int neighbour, distanceFuncType distanceFunction);
+    explicit KdTree(distanceFuncType distanceFunction);
     void formTree(const Matrix &X, const Matrix &y);
-    Matrix search(const Matrix &X);
+    Matrix search(int neighbour, const Matrix &X);
 private:
     treePtr createNode(vector<Matrix> &trainSet, int curDepth, treePtr parent);
     void printTree(std::ostream &out = cout) const;
     Matrix::size_type k;
-    int neighbour;
     treePtr tree;
     distanceFuncType distanceFunction;
 };
