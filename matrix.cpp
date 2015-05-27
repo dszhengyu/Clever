@@ -315,6 +315,19 @@ double Matrix::toDouble() const
     return mat[0];
 }
 
+vector<vector<double>> Matrix::distinctColumn() const
+{
+    vector<vector<double>> result(column);
+    for (size_type i = 0; i < column; ++i) {
+        set<double> distinct;
+        for (size_type j = 0; j < row; ++j) {
+            distinct.insert(this->operator ()(j, i));
+        }
+        result[i].assign(distinct.begin(), distinct.end());
+    }
+    return result;
+}
+
 Matrix operator*(const double c, const Matrix &lhs)
 {
     Matrix result(lhs * c);
@@ -326,6 +339,16 @@ ostream &operator<<(ostream &out, Matrix &m)
     for (int i = 0; i < m.rowSize(); ++i) {
         for (int j = 0; j < m.columnSize(); ++j)
             out << m(i, j) << '\t';
+        out << endl;
+    }
+    return out;
+}
+
+ostream &operator<<(ostream &out, vector<vector<double>> vV)
+{
+    for (auto &v : vV) {
+        for (auto cell : v)
+            out << cell << '\t';
         out << endl;
     }
     return out;

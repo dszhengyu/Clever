@@ -3,6 +3,7 @@
 #include "matrix.h"
 #include "perceptron.h"
 #include "knn.h"
+#include "naivebayes.h"
 
 using std::cout;
 using std::endl;
@@ -10,11 +11,29 @@ using std::endl;
 void MatrixUnitTest();
 void PerceptronUnitTest();
 void KnnUnitTest();
+void NaiveBayesUnitTest();
 
 int main()
 {
-    KnnUnitTest();
+    NaiveBayesUnitTest();
     return 0;
+}
+
+void NaiveBayesUnitTest()
+{
+    Matrix X{{1, 4}, {1, 5}, {1, 5}, {1, 4}, {1, 4}, {2, 4}, {2, 5},
+             {2, 5}, {2, 6}, {2, 6}, {3, 6}, {3, 5}, {3, 5}, {3, 6}, {3, 6}};
+    Matrix y{{-1},    {-1},   {1},    {1},   {-1},   {-1},   {-1},
+             {1},    {1},    {1},     {1},   {1},    {1},    {1},    {-1}};
+    cout << "X" << endl << X << endl;
+    cout << "y" << endl << y << endl;
+
+    NaiveBayes naivebayesModel;
+    naivebayesModel.train(X, y);
+
+    X = Matrix{{2, 4}};
+    auto predict = naivebayesModel.predict(X);
+    cout << predict <<endl;
 }
 
 void KnnUnitTest()
@@ -179,5 +198,9 @@ void MatrixUnitTest()
     for (auto &unit : mVec)
         cout << "row: " << unit;
 
+    m = Matrix{{1, 2, 3}, {1, 5, 3}, {1, 2, 7}};
+    cout << "m" << endl << m << endl;
 
+    auto distinctVV = m.distinctColumn();
+    cout << "distinctVV" << endl << distinctVV << endl;
 }

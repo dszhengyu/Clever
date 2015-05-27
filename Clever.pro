@@ -8,7 +8,8 @@ SOURCES += main.cpp \
     matrix.cpp \
     perceptron.cpp \
     knn.cpp \
-    kdtree.cpp
+    kdtree.cpp \
+    naivebayes.cpp
 
 include(deployment.pri)
 qtcAddDeployment()
@@ -17,5 +18,6 @@ HEADERS += \
     matrix.h \
     perceptron.h \
     knn.h \
-    kdtree.h
+    kdtree.h \
+    naivebayes.h
 

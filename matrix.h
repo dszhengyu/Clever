@@ -2,6 +2,7 @@
 #define MATRIX_H
 
 #include <vector>
+#include <set>
 #include <initializer_list>
 #include <algorithm>
 #include <iostream>
@@ -10,6 +11,7 @@
 #include <numeric>
 
 using std::vector;
+using std::set;
 using std::initializer_list;
 using std::copy;
 using std::transform;
@@ -56,6 +58,7 @@ public:
     double max();
     vector<Matrix> splictRow() const;
     double toDouble() const;
+    vector<vector<double>> distinctColumn() const;
 private:
     size_t row;
     size_t column;
@@ -64,5 +67,6 @@ private:
 
 Matrix operator*(const double c, const Matrix &lhs);
 ostream &operator<<(ostream &out, Matrix &m);
+ostream &operator<<(ostream &out, vector<vector<double>>);
 
 #endif // MATRIX_H
