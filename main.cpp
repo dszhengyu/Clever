@@ -28,12 +28,14 @@ void NaiveBayesUnitTest()
     cout << "X" << endl << X << endl;
     cout << "y" << endl << y << endl;
 
-    NaiveBayes naivebayesModel;
+    NaiveBayes naivebayesModel(1);
     naivebayesModel.train(X, y);
 
     X = Matrix{{2, 4}};
     auto predict = naivebayesModel.predict(X);
     cout << predict <<endl;
+
+
 }
 
 void KnnUnitTest()

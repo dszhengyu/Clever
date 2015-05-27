@@ -23,6 +23,7 @@ using std::sort;
 using std::equal_range;
 using std::partition;
 using std::nth_element;
+using std::transform;
 using std::pair;
 using std::ostream;
 using std::cout;
@@ -31,12 +32,14 @@ using std::end;
 class NaiveBayes
 {
 public:
-    NaiveBayes();
+    explicit NaiveBayes(int lambda = 0);
     ~NaiveBayes();
     void train(const Matrix &X, const Matrix &y);
     Matrix predict(const Matrix &X);
 private:
+    int lambda;
     vector<double> labelDistinct;
+    vector<double> attributeUniqueNumber;
     map<double, double> labelProbability;
     map<double, vector<map<double, double>>> attributeProbability;
 };

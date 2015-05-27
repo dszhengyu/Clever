@@ -1,6 +1,7 @@
 #include "naivebayes.h"
 
-NaiveBayes::NaiveBayes()
+NaiveBayes::NaiveBayes(int lambda)
+    :lambda(lambda)
 {
 
 }
@@ -12,6 +13,12 @@ NaiveBayes::~NaiveBayes()
 
 void NaiveBayes::train(const Matrix &X, const Matrix &y)
 {
+    // clear last data
+    labelDistinct.clear();
+    attributeUniqueNumber.clear();
+    labelProbability.clear();
+    attributeProbability.clear();
+
     // y distinct
     vector<double> labels;
     for (Matrix::size_type i = 0; i < y.rowSize(); ++i) {
@@ -19,7 +26,6 @@ void NaiveBayes::train(const Matrix &X, const Matrix &y)
     }
     sort(labels.begin(), labels.end());
     unique_copy(labels.begin(), labels.end(), back_inserter(labelDistinct));
-
 #ifdef DEBUG
     cout << "all labels" << endl;
     for (auto label : labels)
@@ -34,27 +40,34 @@ void NaiveBayes::train(const Matrix &X, const Matrix &y)
 
     // calculate labelPro
     auto N = y.rowSize();
+    double yDistinct = static_cast<double>(y.distinctColumn()[0].size());
     for (auto yEach : labelDistinct) {
         auto range = equal_range(labels.begin(), labels.end(), yEach);
         auto yCount = range.second - range.first;
-        labelProbability[yEach] = yCount / static_cast<double>(N);
-
+        labelProbability[yEach] = (yCount + lambda) / (static_cast<double>(N) + yDistinct * lambda);
 #ifdef DEBUG
         cout << "y = " << yEach << " ";
-        cout << "labelPro = " << yCount / static_cast<double>(N) << endl;
+        cout << "labelPro = " << labelProbability[yEach] << endl;
 #endif
-
     }
 
+    // calculate distinct number of attribute in each column
+    vector<vector<double>> distinctAttribute = X.distinctColumn();
+    attributeUniqueNumber.resize(X.columnSize());
+    transform(distinctAttribute.begin(), distinctAttribute.end(), attributeUniqueNumber.begin(),
+              [](const vector<double> &distinctUnit) {return distinctUnit.size();});
+#ifdef DEBUG
+    for (auto &distinctNumber : attributeUniqueNumber)
+        cout << distinctNumber << '\t';
+    cout << endl;
+#endif
 
     // attributeProbability
     vector<Matrix> trainVec = X.merge(y, 1).splictRow();
     for (auto yEach : labelDistinct) {
-
 #ifdef DEBUG
         cout << "y = " << yEach << endl;
 #endif
-
         attributeProbability[yEach].resize(X.columnSize());
         auto partitionIter = partition(trainVec.begin(), trainVec.end(),
                   [=](const Matrix &m) {return m(0, m.columnSize() - 1) == yEach;});
@@ -73,7 +86,8 @@ void NaiveBayes::train(const Matrix &X, const Matrix &y)
             for (double &attributeEach : columnDistinct) {
                 auto range = equal_range(columnEach.begin(), columnEach.end(), attributeEach);
                 auto xCount = range.second - range.first;
-                attributeProbability[yEach][i][attributeEach] = xCount / static_cast<double>(xWithSameY);
+                attributeProbability[yEach][i][attributeEach] =
+                        (xCount + lambda) / (static_cast<double>(xWithSameY) + attributeUniqueNumber[i] * lambda);
 #ifdef DEBUG
                 cout << "y = " << yEach << " " << i << "th column ";
                 cout << " attribute = " << attributeEach ;
@@ -104,9 +118,10 @@ Matrix NaiveBayes::predict(const Matrix &X)
             for (auto j = 0; j < X.columnSize(); ++j) {
                 double attribute = X(i, j);
                 double PxSingle;
+                double Sj = attributeUniqueNumber[j];
                 auto &proMap = attributeProbability[label][j];
                 if (proMap.find(attribute) == proMap.end()) {
-                    PxSingle = 0;
+                    PxSingle = 1 / Sj;
                 }
                 else {
                     PxSingle = proMap[attribute];
